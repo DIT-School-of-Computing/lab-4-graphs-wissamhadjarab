@@ -31,7 +31,7 @@ public class Arrays extends PApplet
 		size(500, 500);
 
 		String[] m1 = months;
-		months[0] = "XXX";
+		//months[0] = "XXX";
 		print(m1[0]);
 		for(int i = 0; i < months.length; i ++)
 		{
@@ -86,22 +86,36 @@ public class Arrays extends PApplet
 
 	public void setup() {
 		colorMode(HSB);
-		background(0);
-		randomize();
-		
-		
+		background(255);
+		//randomize();
 	}
 
 	
 	public void draw()
-	{	
+	{	//X axis 
+		stroke(0);
+		line(0, height, width, height)
 
+		colorMode(HSB);
 		background(0);
 		float w = width / (float)months.length;
+		float maxRainfall = max(rainfall);
+
 		for(int i = 0 ; i < months.length ;  i ++)
 		{
-			float x = map1(i, 0, months.length, 0, width);
-			rect(x, height, w, -rainfall[i]);
+			float x = i * w;
+			float barHeight = map1(rainfall[i] , 0, maxRainfall, 0, height);
+			float y = height - barHeight;
+
+			float hue = map1(i, 0, 16, 0, 300);
+
+			fill(hue, 255, 255);
+
+			rect(x, y, w, barHeight);
+
+			textAlign(CENTER, TOP);
+			fill(255);
+			text(months[i], x + w / 2, height - 20);
 		}
 	}
 }
