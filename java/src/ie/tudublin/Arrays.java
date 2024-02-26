@@ -7,12 +7,24 @@ import processing.core.PApplet;
 public class Arrays extends PApplet
 {
 
-	int mode = 0;
-
 
 	String[] months = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
 	float[] rainfall = {200, 260, 300, 150, 100, 50, 10, 40, 67, 160, 400, 420};
+
+	int mode = 0;
+
+	int minIndex = 0;
+	int maxIndex = 0;
+
+	public void keyPressed()
+	{
+		if(key >= '0' && key <= '9')
+		{
+			mode = key - '0';
+		}//end if
+		println(mode);
+	}
 
 	public float map1(float a, float b, float c, float d, float e)
 	{
@@ -157,8 +169,17 @@ public class Arrays extends PApplet
 					rect(x, height-border, w, h);
 					fill(255);
 					text(months[i], x + (w / 2), height - (border / 2));
+					
 				}// end for
 
+				for (int i = 0; i <= max(rainfall); i += 20)
+				{
+					float y = map(i, 0, max(rainfall), height - border, border);
+					line(border - 5, y, border, y);
+					fill(255);
+					textAlign(RIGHT, CENTER); // Align text to the right of the tick
+					text(i, border - 10, y); // Draw the label to the left of the tick
+				}
 				break;
 			}// end case 1
 				
