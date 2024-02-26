@@ -182,7 +182,103 @@ public class Arrays extends PApplet
 				}
 				break;
 			}// end case 1
+
+			case 2:
+			{
+				background(0);
+				float step = width / (float)(months.length - 1);
+				float xPrev = 0;
+				float yPrev = map(rainfall[0], 0, max(rainfall), height, 0); // Start at the first data point
 				
+				// Calculate linear regression (least squares method)
+				float sumX = 0;
+				float sumY = 0;
+				float sumXY = 0;
+				float sumX2 = 0;
+				for (int i = 0; i < months.length; i++)
+				{
+					sumX += i;
+					sumY += rainfall[i];
+					sumXY += i * rainfall[i];
+					sumX2 += i * i;
+				}
+				float n = months.length;
+				float slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+				float yIntercept = (sumY - slope * sumX) / n;
+				
+				for (int i = 0; i < months.length; i++)
+				{
+					float x = i * step;
+					float y = map(rainfall[i], 0, max(rainfall), height, 0); // Current data point
+
+					stroke(255);
+					line(xPrev, yPrev, x, y); // Draw line segment from previous point to current point
+
+					xPrev = x;
+					yPrev = y; // Update previous point for the next iteration
+					
+					// Draw data points as circles
+					fill(255);
+					ellipse(x, y, 5, 5);
+					
+					// Label months on x-axis
+					textAlign(CENTER);
+					fill(255);
+					text(months[i], x, height - 5);
+				}
+				
+				// Draw trend line
+				stroke(255, 0, 0); // Red color for trend line
+				float trendLineStartX = 0;
+				float trendLineStartY = map(yIntercept, 0, max(rainfall), height, 0);
+				float trendLineEndX = width - 1;
+				float trendLineEndY = map((slope * (months.length - 1) + yIntercept), 0, max(rainfall), height, 0);
+				line(trendLineStartX, trendLineStartY, trendLineEndX, trendLineEndY);
+
+				// Label y-axis
+				textAlign(RIGHT, CENTER);
+				fill(255);
+				for (int i = 0; i <= max(rainfall); i += 20)
+				{
+					float y = map(i, 0, max(rainfall), height, 0);
+					text(i, width - 5, y);
+				}
+				break;
+			}// end case 
+
+			case 3:
+			{
+				background(0);
+				float r = mouseX;
+				float cx = width / 2;
+				float cy = height / 2;
+				stroke(255);
+				noFill();
+				//circle(cx, cy, r * 2.0f);
+				float tot = 0;
+				for(float f:rainfall)
+				{
+					tot += f;
+				}
+				float start = 0;
+
+				for(int i = 0 ; i < rainfall.length ; i ++)
+				{
+					float val = map(rainfall[i], 0, tot, 0, TWO_PI);
+					float c = map(i, 0, rainfall.length, 0, 255);
+					noStroke();
+					fill(c, 255, 255);
+					arc(cx, cy, r * 2, r * 2, start, start + val, PIE);
+						
+					float theta = start + (val * 0.5f);
+					float x = cx + cos(theta) * (r * 1.2f);
+					float y = cy + sin(theta) * (r * 1.2f);
+					fill(255);
+					text(months[i], x, y);
+					start = start + val;
+				}
+				break;
+			}// end case 3
 				
 		}// end switch
 		
